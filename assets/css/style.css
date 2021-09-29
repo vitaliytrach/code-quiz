@@ -212,3 +212,19 @@ button:hover {
 
 /* End Scene 4 ---------------------------------- */
 
+@media only screen and (max-width: 800px) {
+    header {
+      flex-direction: column;
+      margin-bottom: 10%;
+    }
+
+    #highscore {
+        position: relative;
+        left: auto;
+    }
+
+    #countdown {
+        position: relative;
+        right: auto;
+    }
+  }

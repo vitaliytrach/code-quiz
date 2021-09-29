@@ -1,213 +1,193 @@
-// Variables to track certain things
-var currQuestion = 0;
+var questionIndex = 0;
 var targetAns = "";
 var timeRemaining = 60;
-var timer = null;
+var isPlaying = false;
 var highscores = [];
-var showingResult = false;
 
-// Variables for often accessed HTML elements
-var countdownEl = document.getElementById("countdown");
-var enterInitalsContainerEl = document.getElementById("enter-initials-container");
-var containerEl = document.getElementById("container");
-var qBoxEl = document.getElementById("question-box");
-var initalsEl = document.getElementById("initals");
-var highscoresContainerEl = document.getElementById("highscores-container");
-var highscoresListEl = document.getElementById("highscore-list");
-var listContainerEl = document.getElementById("list-container");
+// Variables for HTML elements
+var sceneOne = document.getElementById("container");
+var sceneTwo = document.getElementById("question-box");
+var sceneThree = document.getElementById("enter-initials-container");
+var sceneFour = document.getElementById("highscores-container");
+var ansList = document.getElementById("ans-list");
 
-// Adding Event Listeners
-document.getElementById("ans-list").addEventListener("click", handleListClick);
-document.getElementById("start-btn").addEventListener("click", handleStartBtnClick);
+// Adding the listeners
+document.getElementById("start-btn").addEventListener("click", handleStartQuizBtn);
+document.getElementById("ans-list").addEventListener("click", handleChoiceSelection);
 document.getElementById("submit").addEventListener("submit", handleSubmit);
-document.getElementById("clear-btn").addEventListener("click", handleClearScoreboard);
+document.getElementById("clear-btn").addEventListener("click", handleClearHighscores);
 document.getElementById("go-back-btn").addEventListener("click", handleGoBackBtn);
-document.getElementById("highscore").addEventListener("click", handleCheckHighscore);
+document.getElementById("highscore").addEventListener("click", handleViewHighScore);
 
-function enterInitals() {
-    clearInterval(timer);
-    timer = null;
-    containerEl.style.display = "none";
-    qBoxEl.style.display = "none";
-    updateCountdown();
-
-    var finalScoreH3 = document.getElementById("final-score");
-    finalScoreH3.textContent = "Your final score is " + timeRemaining;
-
-    enterInitalsContainerEl.style.display = "block";
+// Event method for when user selects "View Highscores" button
+function handleViewHighScore() {
+    sceneOne.style.display = "none";
+    sceneTwo.style.display = "none";
+    sceneThree.style.display = "none";
+    updateScoreBoard();
+    sceneFour.style.display = "block";
 }
 
-function addToHighscore(name, score) {
-    highscores.push({
-        playerName: name,
-        playerScore: score
-    });
-}
-
-function reset() {
-    currQuestion = 0;
-    targetAns = "";
-    timeRemaining = 60;
-    updateCountdown();
-
-    if(timer !== null) {
-        clearInterval(timer);
-        timer = null;
-    }
-
-    if(showingResult) {
-        listContainerEl.removeChild(listContainerEl.lastChild);
-    } 
-    showingResult = false;
-}
-
-function generateNextQuestion() {
-    if(currQuestion >= quiz.questions.length) return;
-
-    var qEl = document.getElementById("question");
-    var aListEl = document.getElementById("ans-list");
-    var nextQ = quiz.questions[currQuestion].question;
-    var choicesArr = quiz.questions[currQuestion].choices;
-    var ans = quiz.questions[currQuestion].answer;
-
-    qEl.textContent = nextQ;
-
-    clearList();
-    for(var i = 0; i < choicesArr.length; i++) {
-        var item = document.createElement("li");
-        item.textContent = choicesArr[i];
-        aListEl.appendChild(item);
-    }
-
-    currQuestion++;
-    targetAns = ans;
-}
-
-function showHighscores() {
-    containerEl.style.display = "none";
-    qBoxEl.style.display = "none";
-    enterInitalsContainerEl.style.display = "none";
-    highscoresContainerEl.style.display = "block";
-
-    while(highscoresListEl.firstChild) {
-        highscoresListEl.removeChild(highscoresListEl.firstChild);
-    }
-
-    for(var i = 0; i < highscores.length; i++) {
-        var newLi = document.createElement("li");
-        newLi.innerHTML = highscores[i].playerName + " - " + highscores[i].playerScore;
-        highscoresListEl.appendChild(newLi);
-    }
-}
-
-// EVENT HANDLERS ------------------------------------------
-
-function handleCheckHighscore() {
-    reset();
-    showHighscores();
-}
-
+// Event method for when user presses "Go Back" button on the high scores scene
 function handleGoBackBtn() {
-    reset();
-    qBoxEl.style.display = "none";
-    enterInitalsContainerEl.style.display = "none";
-    highscoresContainerEl.style.display = "none";
-    containerEl.style.display = "block";
+    sceneFour.style.display = "none";
+    resetGame();
+    sceneOne.style.display = "block";
 }
 
-function handleClearScoreboard() {
+// Event method for when user clears scoreboard
+function handleClearHighscores() {
     highscores = [];
-    showHighscores();
+    resetList(document.getElementById("highscore-list"));
 }
 
+// event for when user submits their initials and score to the highscores
 function handleSubmit(e) {
     e.preventDefault();
-    var input = initalsEl.value;
-    if(input.length !== 0) {
-        addToHighscore(input, timeRemaining);
-        showHighscores();
-    }
+    var inputBox = document.getElementById("initals");
+    var initals = inputBox.value;
+
+    if(initals === "") {
+        return;
+    } 
+
+    insertAtCorrectSpot(initals, timeRemaining);
+
+    sceneThree.style.display = "none";
+    updateScoreBoard();
+    sceneFour.style.display = "block";
 }
 
-function handleListClick(e) {
-    if(currQuestion >= quiz.questions.length) {
-        enterInitals();
-    }
-
-    var ans = null;
-    if(e.target.innerHTML !== targetAns) {
-        timeRemaining -= 10;
-        updateCountdown();
-        checkValidTimer();
-        ans = createRightOrWrongEl("Incorrect!");
-    } else {
-        ans = createRightOrWrongEl("Correct!");
-    }
-    
+// event method for when user starts the quiz
+function handleStartQuizBtn() {
+    isPlaying = true;
     generateNextQuestion();
+    sceneOne.style.display = "none";
+    sceneTwo.style.display = "block";
 
-    if(showingResult) {
-        listContainerEl.removeChild(listContainerEl.lastChild); 
-    }
+    var timer = setInterval(function() {
+        if(sceneTwo.style.display === "none") {
+            clearInterval(timer);
+            return;
+        }
 
-    showingResult = true;
-    listContainerEl.appendChild(ans);
-    var result = setInterval(function() {
-        showingResult = false;
-        listContainerEl.removeChild(listContainerEl.lastChild);
-        clearInterval(result);
+        timeRemaining--;
+        updateTimer();
+        
+        if(timeRemaining === 0 || !isPlaying) {
+            resetList(ansList);
+            enterHighScore();
+            clearInterval(timer);
+        }
     }, 1000);
 }
 
-function handleStartBtnClick() {
-    containerEl.style.display = "none";
-    qBoxEl.style.display = "block";
-    generateNextQuestion();
-    timer = setInterval(handleCountdown, 1000);
-}
+// Event method for when user makes a select
+function handleChoiceSelection(e) {
 
-function handleCountdown() {
-    timeRemaining--;
-    updateCountdown();
-    checkValidTimer();
-}
+    // if ans is incorrect
+    if(e.target.textContent !== targetAns) {
+        timeRemaining -= 10;
+        updateTimer();
+    }
 
-// HELPER METHODS -------------------------------------------
-
-function clearList() {
-    var olEl = document.getElementById("ans-list");
-
-    while(olEl.firstChild) {
-        olEl.removeChild(olEl.firstChild);
+    if(questionIndex >= quiz.questions.length) {
+        isPlaying = false;
+        enterHighScore();
+    } else {
+        resetList(ansList);
+        generateNextQuestion();
     }
 }
 
-function updateCountdown() {
-    countdownEl.textContent = "Time Remaining: " + timeRemaining + " seconds!";
+function enterHighScore() {
+    sceneTwo.style.display = "none";
+
+    var msg = document.getElementById("final-score");
+    msg.textContent = "Your final score is: " + timeRemaining;
+
+    sceneThree.style.display = "block";
 }
 
-function checkValidTimer() {
+// Generating the next quiz question
+function generateNextQuestion() {
+    var question = document.getElementById("question");
+    targetAns = quiz.questions[questionIndex].answer;
+
+    // Update the question
+    question.textContent = quiz.questions[questionIndex].question;
+
+    // Print all the options
+    for(var i = 0; i < quiz.questions[questionIndex].choices.length; i++) {
+        var newLi = document.createElement("li");
+        newLi.textContent = quiz.questions[questionIndex].choices[i];
+        ansList.appendChild(newLi);
+    }
+
+    questionIndex++;
+}
+
+// updating and creating all the scoreboard li elements
+function updateScoreBoard() {
+    var list = document.getElementById("highscore-list");
+    resetList(list);
+
+    for(var i = 0; i < highscores.length; i++) {
+        var newLi = document.createElement("li");
+        newLi.textContent = highscores[i].player + " - " + highscores[i].score;
+        list.appendChild(newLi);
+    }
+}
+
+// Updating the timer on the UI
+function updateTimer() {
+    var countdown = document.getElementById("countdown");
+
     if(timeRemaining <= 0) {
         timeRemaining = 0;
-        enterInitals();
+    }
+
+    countdown.textContent = "Time Remaining: " + timeRemaining + " seconds!";
+}
+
+// Removes children of an HTML list
+function resetList(list) {
+    while(list.firstChild) {
+        list.removeChild(list.firstChild);
     }
 }
 
-function createRightOrWrongEl(ans) {
-    var line = document.createElement("div");
-    line.id = "line-ans";
-
-    var theAns = document.createElement("p");
-    theAns.id = "wrong-right";
-    theAns.textContent = ans;
-
-    var contain = document.createElement("div");
-    contain.appendChild(line);
-    contain.appendChild(theAns);
-
-    return contain;
+// Method to reset the game to inital state
+function resetGame() {
+    questionIndex = 0;
+    targetAns = "";
+    timeRemaining = 60;
+    updateTimer();
+    isPlaying = false;
+    resetList(ansList);
+    document.getElementById("initals").value = "";
 }
 
+// Method to insert at the proper spot when adding to scoreboard
+function insertAtCorrectSpot(player, score) {
+    var index = 0;
+
+    for(var i = 0; i < highscores.length; i++) {
+        var currScore = highscores[i].score;
+
+        if(score >= currScore) {
+            index = i;
+            break;
+        }
+    }
+
+    highscores.splice(index, 0, {
+        "player": player,
+        "score": score
+    })
+}
+
+// js object to hold all the data on the quiz
 const quiz = {
     "questions": [
       {
