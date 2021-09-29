@@ -8,6 +8,55 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
+    <header>
+        <h1 id="highscore">View Highscores</h1>
+        <h1 id="countdown">Time Remaining: 60 seconds!</h1>
+    </header>
+
+    <section>
+        <!-- Scene 1 -->
+        <div id="container">
+            <div id="start-scene">
+                <h2>Coding Quiz Challenge</h2>
+                <div id="line"></div>
+                <p id ="start-p">Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your scoretime by 10 seconds!</p>
+                <div id="start-btn-container">
+                    <button id="start-btn">Start Quiz</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Scene 2 -->
+        <div id="question-box">
+            <div id="list-container">
+                <p id="question"></p>
+                <div id="line"></div>
+                <ol id="ans-list" type="a"></ol>
+            </div>
+        </div>
+
+        <div id="enter-initials-container">
+            <h2>All done!</h2>
+            <h3 id="final-score"></h3>
+            <form id="submit">
+                <label>Enter initials:</label>
+                <input id="initals"/>
+                <button>Submit</button>
+            </form>
+        </div>
+
+        <div id="highscores-container">
+            <h2>Highscores</h2>
+            <ol id="highscore-list">
+            </ol>
+            <div id="btn-container">
+                <button id="go-back-btn">Go Back</button>
+                <button id="clear-btn">Clear Highscores</button>
+            </div>
+        </div>
+
+    </section>
     
     <script src="./assets/js/script.js"></script>
 </body>

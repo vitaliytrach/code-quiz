@@ -1,3 +1,163 @@
+:root {
+    --dark: #581845;
+    --mediumDark: #900c3f;
+    --light: #f3f7ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    background-color: salmon;
+    background-color: var(--light);
+}
+
+header{
+    position: relative;
+    display: flex;
+    height: 4vh;
+}
+
+section {
+    position: relative;
+}
+
+h1 {
+    color: var(--dark);
+}
+
+h2 {
+    font-size: 36px;
+    /* margin: 20px; */
+}
+
+ol {
+    list-style-position: inside;
+}
+
+button {
+    background-color: var(--mediumDark);
+    padding: 5px;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: var(--dark);
+}
+
+ 
+/* Scene 1 ------------------------------- */
+#container {
+    position: relative;
+    width: 100%;
+    display: block;
+    margin-top: 5%;
+}
+
+#start-scene {
+    width: 40%;
+    height: 50%;
+    position: absolute;
+    left:30%
+}
+
+#line {
+    width: 100%;
+    height: 4px;
+    background-color: var(--dark);
+    border-radius: 2px;
+}
+
+#start-btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5%;
+}
+
+#start-p {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 2%;
+}
+
+#start-scene h2 {
+    text-align: center;
+    margin-bottom: 5%;
+    font-size: 45px;
+    color:var(--dark)
+}
+
+/* End scene 1 -------------------------------- */
+
+
+/* Start scene 2-------------------------------- */
+#question-box {
+    margin-top: 5%;
+    width: 30vw;
+    display: none;
+    position: absolute;
+    left: 35%;
+}
+
+#list-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#question {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+#ans-list {
+    margin-top: 10px;
+}
+
+#ans-list li {
+    margin-left: 5%;
+    margin-bottom: 2%;
+    font-size: 20px;
+    background-color: var(--mediumDark);
+    color:white;
+    border-radius: 5px;
+    width: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px
+}
+
+#ans-list li:hover {
+    background-color: var(--dark);
+}
+
+/* End Scene 2------------------------------------- */
+
+#highscore {
+    position: absolute;
+    left: 10px;
+}
+
+#countdown {
+    position: absolute;
+    right: 50px;
+}
+
+
+
+
+#enter-initials-container {
+    display: none;
+}
+
+#highscores-container {
+    display: none;
+}
+
+#btn-container {
+    display: block;
 }
