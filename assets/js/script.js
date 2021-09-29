@@ -29,7 +29,7 @@ function enterInitals() {
     timer = null;
     containerEl.style.display = "none";
     qBoxEl.style.display = "none";
-    
+
     var finalScoreH3 = document.getElementById("final-score");
     finalScoreH3.textContent = "Your final score is " + timeRemaining;
 
@@ -84,7 +84,7 @@ function showHighscores() {
 
     for(var i = 0; i < highscores.length; i++) {
         var newLi = document.createElement("li");
-        newLi.innerHTML = highscores[i].playerName + ": " + highscores[i].playerScore;
+        newLi.innerHTML = highscores[i].playerName + " - " + highscores[i].playerScore;
         highscoresListEl.appendChild(newLi);
     }
 }

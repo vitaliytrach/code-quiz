@@ -48,6 +48,12 @@ button:hover {
     background-color: var(--dark);
 }
 
+.initals-outer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
  
 /* Scene 1 ------------------------------- */
 #container {
@@ -140,12 +146,6 @@ button:hover {
 
 /* Start Scene 3 ---------------------------------- */
 
-#initals-outer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 #enter-initials-container {
     margin-top: 5%;
     width: fit-content;
@@ -164,6 +164,30 @@ button:hover {
 
 /* End Scene 3 ---------------------------------- */
 
+/* Start Scene 4 ---------------------------------- */
+
+#highscores-container {
+    display: none;
+    margin-top: 5%;
+}
+
+#highscores-container h2 {
+    color: var(--dark);
+}
+
+#highscore-list {
+    margin-top: 25px;
+    color: var(--dark);
+    font-family: sans-serif;
+}
+
+#btn-container {
+    margin-top: 25px;
+    display: block;
+}
+
+/* End Scene 4 ---------------------------------- */
+
 
 #highscore {
     position: absolute;
@@ -173,17 +197,4 @@ button:hover {
 #countdown {
     position: absolute;
     right: 50px;
-}
-
-
-
-
-
-
-#highscores-container {
-    display: none;
-}
-
-#btn-container {
-    display: block;
 }
