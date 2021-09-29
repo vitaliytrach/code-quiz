@@ -137,6 +137,34 @@ button:hover {
 
 /* End Scene 2------------------------------------- */
 
+
+/* Start Scene 3 ---------------------------------- */
+
+#initals-outer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#enter-initials-container {
+    margin-top: 5%;
+    width: fit-content;
+    display: none;
+}
+
+#all-done {
+    color: var(--dark);
+    letter-spacing: 2px;
+}
+
+#final-score {
+    margin-top: 5%;
+}
+
+
+/* End Scene 3 ---------------------------------- */
+
+
 #highscore {
     position: absolute;
     left: 10px;
@@ -150,9 +178,7 @@ button:hover {
 
 
 
-#enter-initials-container {
-    display: none;
-}
+
 
 #highscores-container {
     display: none;
