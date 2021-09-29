@@ -54,6 +54,20 @@ button:hover {
     align-items: center;
 }
 
+#highscore {
+    position: absolute;
+    left: 10px;
+}
+
+#highscore:hover {
+    color: var(--mediumDark);
+}
+
+#countdown {
+    position: absolute;
+    right: 50px;
+}
+
  
 /* Scene 1 ------------------------------- */
 #container {
@@ -141,6 +155,16 @@ button:hover {
     background-color: var(--dark);
 }
 
+#line-ans {
+    margin-top: 10px;
+    border: 1px dashed var(--dark);
+}
+
+#wrong-right {
+    color: var(--mediumDark);
+}
+
+
 /* End Scene 2------------------------------------- */
 
 
@@ -188,13 +212,3 @@ button:hover {
 
 /* End Scene 4 ---------------------------------- */
 
-
-#highscore {
-    position: absolute;
-    left: 10px;
-}
-
-#countdown {
-    position: absolute;
-    right: 50px;
-}

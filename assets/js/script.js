@@ -4,6 +4,7 @@ var targetAns = "";
 var timeRemaining = 60;
 var timer = null;
 var highscores = [];
+var showingResult = false;
 
 // Variables for often accessed HTML elements
 var countdownEl = document.getElementById("countdown");
@@ -13,6 +14,7 @@ var qBoxEl = document.getElementById("question-box");
 var initalsEl = document.getElementById("initals");
 var highscoresContainerEl = document.getElementById("highscores-container");
 var highscoresListEl = document.getElementById("highscore-list");
+var listContainerEl = document.getElementById("list-container");
 
 // Adding Event Listeners
 document.getElementById("ans-list").addEventListener("click", handleListClick);
@@ -20,15 +22,14 @@ document.getElementById("start-btn").addEventListener("click", handleStartBtnCli
 document.getElementById("submit").addEventListener("submit", handleSubmit);
 document.getElementById("clear-btn").addEventListener("click", handleClearScoreboard);
 document.getElementById("go-back-btn").addEventListener("click", handleGoBackBtn);
-
-
-
+document.getElementById("highscore").addEventListener("click", handleCheckHighscore);
 
 function enterInitals() {
     clearInterval(timer);
     timer = null;
     containerEl.style.display = "none";
     qBoxEl.style.display = "none";
+    updateCountdown();
 
     var finalScoreH3 = document.getElementById("final-score");
     finalScoreH3.textContent = "Your final score is " + timeRemaining;
@@ -47,7 +48,17 @@ function reset() {
     currQuestion = 0;
     targetAns = "";
     timeRemaining = 60;
-    timer = null;
+    updateCountdown();
+
+    if(timer !== null) {
+        clearInterval(timer);
+        timer = null;
+    }
+
+    if(showingResult) {
+        listContainerEl.removeChild(listContainerEl.lastChild);
+    } 
+    showingResult = false;
 }
 
 function generateNextQuestion() {
@@ -91,6 +102,11 @@ function showHighscores() {
 
 // EVENT HANDLERS ------------------------------------------
 
+function handleCheckHighscore() {
+    reset();
+    showHighscores();
+}
+
 function handleGoBackBtn() {
     reset();
     qBoxEl.style.display = "none";
@@ -114,20 +130,33 @@ function handleSubmit(e) {
 }
 
 function handleListClick(e) {
-    // Correct answer
-    if(e.target.innerHTML === targetAns) {
-        if(currQuestion < quiz.questions.length) {
-            generateNextQuestion();
-        } else {
-            enterInitals();
-        }
-    } 
-    // Incorrect answer
-    else {
-        timeRemaining = timeRemaining - 10;
+    if(currQuestion >= quiz.questions.length) {
+        enterInitals();
+    }
+
+    var ans = null;
+    if(e.target.innerHTML !== targetAns) {
+        timeRemaining -= 10;
         updateCountdown();
         checkValidTimer();
+        ans = createRightOrWrongEl("Incorrect!");
+    } else {
+        ans = createRightOrWrongEl("Correct!");
     }
+    
+    generateNextQuestion();
+
+    if(showingResult) {
+        listContainerEl.removeChild(listContainerEl.lastChild); 
+    }
+
+    showingResult = true;
+    listContainerEl.appendChild(ans);
+    var result = setInterval(function() {
+        showingResult = false;
+        listContainerEl.removeChild(listContainerEl.lastChild);
+        clearInterval(result);
+    }, 1000);
 }
 
 function handleStartBtnClick() {
@@ -138,8 +167,8 @@ function handleStartBtnClick() {
 }
 
 function handleCountdown() {
-    updateCountdown();
     timeRemaining--;
+    updateCountdown();
     checkValidTimer();
 }
 
@@ -162,6 +191,21 @@ function checkValidTimer() {
         timeRemaining = 0;
         enterInitals();
     }
+}
+
+function createRightOrWrongEl(ans) {
+    var line = document.createElement("div");
+    line.id = "line-ans";
+
+    var theAns = document.createElement("p");
+    theAns.id = "wrong-right";
+    theAns.textContent = ans;
+
+    var contain = document.createElement("div");
+    contain.appendChild(line);
+    contain.appendChild(theAns);
+
+    return contain;
 }
 
 const quiz = {
